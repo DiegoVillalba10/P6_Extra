@@ -1,4 +1,5 @@
 Guía de Usuario
+
 Este archivo será tu referencia para comprender y utilizar las diferentes funcionalidades del programa. A continuación, se detallan las características principales y aspectos clave que debes conocer para garantizar un uso correcto.
 
 Funciones Principales
