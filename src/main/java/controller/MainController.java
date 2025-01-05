@@ -113,6 +113,7 @@ public class MainController {
                     try {
                         // Eliminar departamento de la base de datos
                         departamentoDAO.eliminarDepartamento(departamentoId);
+                        MainView.actualizarEstado(MainView.labelEstado);
 
                         // Eliminar fila de la tabla
                         dtm.removeRow(filaSeleccionada);
@@ -167,6 +168,7 @@ public class MainController {
                     try {
                         // Eliminar empleado de la base de datos
                         empleadoDAO.eliminarEmpleado(empleadoId);
+                        MainView.actualizarEstado(MainView.labelEstado);
 
                         // Eliminar fila de la tabla
                         dtm.removeRow(filaSeleccionada);

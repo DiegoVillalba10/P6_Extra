@@ -21,6 +21,8 @@ public class MainView extends JFrame {
     private final JMenuItem itemListarDepartamentos;
     private final JMenuItem itemListarEmpleados;
 
+    public static JLabel labelEstado;
+
     public MainView() {
         setTitle("Gestión de Empleados");
         setSize(600, 400);
@@ -83,9 +85,16 @@ public class MainView extends JFrame {
         scrollBienvenida.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
 
         JPanel panelInferior = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JLabel labelEstado = new JLabel("Cargando datos...");
+        labelEstado = new JLabel("Cargando datos...");
         panelInferior.add(labelEstado);
 
+        actualizarEstado(labelEstado);
+
+        add(scrollBienvenida, BorderLayout.CENTER);
+        add(panelInferior, BorderLayout.SOUTH);
+    }
+
+    public static void actualizarEstado(JLabel labelEstado) {
         SwingUtilities.invokeLater(() -> {
             try {
                 EmpleadoDAO empleadoDAO = new EmpleadoDAO();
@@ -97,9 +106,6 @@ public class MainView extends JFrame {
                 labelEstado.setText("Error al cargar datos.");
             }
         });
-
-        add(scrollBienvenida, BorderLayout.CENTER);
-        add(panelInferior, BorderLayout.SOUTH);
     }
 
     // Getters para poder interactuar con los elementos de la vista.
