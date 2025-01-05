@@ -1,3 +1,9 @@
+-- CREACIÓN DE LA BASE DE DATOS.
+
+CREATE DATABASE IF NOT EXISTS gestion_empleados;
+
+USE gestion_empleados;
+
 -- CREACIÓN DE LAS TABLAS --
 
 CREATE TABLE Departamento (
