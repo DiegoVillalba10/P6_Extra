@@ -13,11 +13,12 @@ public class Main {
             DepartamentoDAO departamentoDAO = new DepartamentoDAO();
             EmpleadoDAO empleadoDAO = new EmpleadoDAO();
             
-            // Creamos la vista principa..
+            // Creamos la vista principal.
             MainView mainView = new MainView();
             // Le asignamos el controlador principal con sus funcionalidades.
             MainController mainController = new MainController(mainView, departamentoDAO, empleadoDAO);
             // También se añade DepartamentoDAO y EmpleadoDAO para poder interactuar con la base de datos.
+            
             // Mostrar la vista principal
             mainView.setVisible(true);
             
