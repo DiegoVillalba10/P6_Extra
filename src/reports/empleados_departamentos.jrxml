@@ -1,0 +1,64 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="empleados" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="173c1cf0-0699-4d5e-9b72-5b6a0b38e54d">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<query language="sql"><![CDATA[SELECT 
+    d.nombre AS departamento,
+    COUNT(e.id) AS numero_empleados
+FROM 
+    departamento d
+LEFT JOIN 
+    empleado e ON d.id = e.departamento_id
+GROUP BY 
+    d.id, d.nombre
+]]></query>
+	<field name="departamento" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nombre"/>
+		<property name="com.jaspersoft.studio.field.label" value="departamento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="departamento"/>
+	</field>
+	<field name="numero_empleados" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="numero_empleados"/>
+		<property name="com.jaspersoft.studio.field.label" value="numero_empleados"/>
+	</field>
+	<background splitType="Stretch"/>
+	<title height="79" splitType="Stretch"/>
+	<pageHeader height="35" splitType="Stretch"/>
+	<columnHeader height="61" splitType="Stretch">
+		<element kind="staticText" uuid="8a3439e2-f065-4b47-b244-213a75282797" mode="Opaque" x="0" y="30" width="278" height="30" forecolor="#FFFFFF" backcolor="#030303" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[departamento]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="830d3888-836e-418e-976d-9244b871d3c3"/>
+		</element>
+		<element kind="staticText" uuid="358ec0bf-e06a-47bd-a80e-2293ce7a6a06" mode="Opaque" x="279" y="30" width="277" height="30" forecolor="#FFFFFF" backcolor="#030303" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[numero_empleados]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="11e3f5a3-ed53-45a4-ad29-a749b97a0a1e"/>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="55" splitType="Stretch">
+			<element kind="textField" uuid="756bcdb6-2c44-4d36-9ed2-13f6764ed710" x="0" y="5" width="278" height="30" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{departamento}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="830d3888-836e-418e-976d-9244b871d3c3"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="bb50e830-2d24-436d-bdfa-f0036e31814b" x="278" y="5" width="277" height="30" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{numero_empleados}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="11e3f5a3-ed53-45a4-ad29-a749b97a0a1e"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+		</band>
+	</detail>
+	<columnFooter height="45" splitType="Stretch"/>
+	<pageFooter height="54" splitType="Stretch"/>
+	<summary height="42" splitType="Stretch"/>
+</jasperReport>
