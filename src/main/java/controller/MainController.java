@@ -186,60 +186,74 @@ public class MainController {
         listaEmpleadosView.setVisible(true);
     }
         // Utilizado para la generación de informes mediante archivos previamente compilados en JasperSoft.
-    private void generarInforme() {
-        try {
-            // Usamos un selector de archivo para que el usuario elija el archivo de formato jasper.
-            JFileChooser fileChooser = new JFileChooser("src/reports/"); // Carpeta de los informes
-            // Solo mostrará los informes compilados.
-            fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Archivos Jasper", "jasper"));
-            fileChooser.setDialogTitle("Selecciona el informe");
+        private void generarInforme() {
+            try {
+                // Usamos un selector de archivo para que el usuario elija los archivos de formato Jasper.
+                JFileChooser fileChooser = new JFileChooser("src/reports/");
+                fileChooser.setMultiSelectionEnabled(true); // Permitir selección múltiple
+                fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Archivos Jasper", "jasper"));
+                fileChooser.setDialogTitle("Selecciona los informes");
 
-            // Mostrar el cuadro de diálogo y verificar si el usuario seleccionó un archivo
-            int result = fileChooser.showOpenDialog(mainView);
-            if (result != JFileChooser.APPROVE_OPTION) {
-                JOptionPane.showMessageDialog(mainView, "No se ha seleccionado ningún archivo.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+                // Mostrar el cuadro de diálogo y verificar si el usuario seleccionó archivos
+                int result = fileChooser.showOpenDialog(mainView);
+                if (result != JFileChooser.APPROVE_OPTION) {
+                    JOptionPane.showMessageDialog(mainView, "No se ha seleccionado ningún archivo.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
 
-            // Obtener la ruta del archivo seleccionado
-            File selectedFile = fileChooser.getSelectedFile();
-            String reportPath = selectedFile.getAbsolutePath();
+                // Obtener los archivos seleccionados
+                File[] selectedFiles = fileChooser.getSelectedFiles();
+                if (selectedFiles.length == 0) {
+                    JOptionPane.showMessageDialog(mainView, "No se ha seleccionado ningún archivo.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
 
-            // Verificar si el archivo seleccionado es válido
-            if (!reportPath.endsWith(".jasper")) {
-                JOptionPane.showMessageDialog(mainView, "El archivo seleccionado no es un informe válido.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+                System.out.println("Archivos seleccionados para generar informes:");
+                for (File file : selectedFiles) {
+                    System.out.println("- " + file.getName());
+                }
 
-            System.out.println("Cargando el informe: " + selectedFile.getName());
+                // Establecer la conexión con la base de datos
+                try (Connection connection = BaseDatos.getConnection()) {
+                    for (File selectedFile : selectedFiles) {
+                        String reportPath = selectedFile.getAbsolutePath();
 
-            // Establecer la conexión con la base de datos
-            try (Connection connection = BaseDatos.getConnection()) {
-                // Llenar el informe con la conexión a la base de datos
-                JasperPrint jasperPrint = JasperFillManager.fillReport(reportPath, null, connection);
+                        // Verificar si el archivo seleccionado es válido
+                        if (!reportPath.endsWith(".jasper")) {
+                            JOptionPane.showMessageDialog(mainView, "El archivo seleccionado no es un informe válido: " + selectedFile.getName(), "Error", JOptionPane.ERROR_MESSAGE);
+                            continue;
+                        }
 
-                // Ruta donde se guardará el archivo PDF
-                String outputPath = "src/reports/" + selectedFile.getName().replace(".jasper", ".pdf");
+                        System.out.println("Cargando el informe: " + selectedFile.getName());
 
-                // Exportar el informe a PDF
-                JasperExportManager.exportReportToPdfFile(jasperPrint, outputPath);
+                        // Llenar el informe con la conexión a la base de datos
+                        JasperPrint jasperPrint = JasperFillManager.fillReport(reportPath, null, connection);
 
-                // Mostrar el mensaje de éxito
-                JOptionPane.showMessageDialog(mainView, "Informe generado correctamente: " + outputPath, "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                        // Ruta donde se guardará el archivo PDF
+                        String outputPath = "src/reports/" + selectedFile.getName().replace(".jasper", ".pdf");
 
-                // Mostrar el informe en el visor de Jasper.
-                JasperViewer.viewReport(jasperPrint, false);
-            } catch (SQLException e) {
-                JOptionPane.showMessageDialog(mainView, "Error al conectar a la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
+                        // Exportar el informe a PDF
+                        JasperExportManager.exportReportToPdfFile(jasperPrint, outputPath);
+
+                        // Mostrar el informe en el visor de Jasper.
+                        JasperViewer.viewReport(jasperPrint, false);
+
+                        System.out.println("Informe generado correctamente: " + outputPath);
+                    }
+
+                    // Mostrar un mensaje final
+                    JOptionPane.showMessageDialog(mainView, "Todos los informes seleccionados han sido procesados.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                } catch (SQLException e) {
+                    JOptionPane.showMessageDialog(mainView, "Error al conectar a la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
+                    e.printStackTrace();
+                } catch (JRException e) {
+                    JOptionPane.showMessageDialog(mainView, "Error al generar los informes.", "Error", JOptionPane.ERROR_MESSAGE);
+                    e.printStackTrace();
+                }
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(mainView, "Ocurrió un error inesperado.", "Error", JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
-            } catch (JRException e) {
-                JOptionPane.showMessageDialog(mainView, "Error al generar el informe.", "Error", JOptionPane.ERROR_MESSAGE);
-                e.printStackTrace();
             }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(mainView, "Ocurrió un error inesperado.", "Error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
         }
-    }
 }
